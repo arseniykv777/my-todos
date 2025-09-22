@@ -1,0 +1,59 @@
+form {
+  max-width: 700px;
+  width: 100%;
+  gap: 20px;
+  padding-top: 1rem;
+}
+
+textarea {
+  max-width: 700px;
+  max-height: 200px;
+  min-width: 200px;
+  min-height: 100px;
+  resize: both;
+}
+
+form, label {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+}
+
+input, textarea {
+  font-size: 18px;
+  padding: 1rem .5rem;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+}
+
+.file-input {
+  display: none;
+}
+
+.form__footer {
+  display: flex;
+}
+
+.file-input__label {
+  padding: 1rem .5rem;
+  border-radius: 10px;
+  background-color: black;
+  width: max-content;
+  cursor: pointer;
+}
+
+.form__buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.form__buttons button:first-child {
+  background-color: grey;
+  color: black;
+}
+
+.form__buttons button:last-child {
+  background-color: green;
+}
