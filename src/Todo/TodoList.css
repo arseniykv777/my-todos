@@ -1,0 +1,15 @@
+td {
+  padding: 10px;
+}
+
+section {
+  padding: 20px;
+}
+
+.done {
+  background-color: green;
+}
+
+.delete {
+  background-color: red;
+}
