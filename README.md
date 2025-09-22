@@ -1,2 +1,2 @@
-<h1>TODOS на React с React Router</h1>
-<p>Без особых заморочек по CSS, простой адаптив.</p>
+<h1>TODOS на React 19</h1>
+<p>С применением React Router</p>
