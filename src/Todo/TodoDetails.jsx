@@ -1,14 +1,16 @@
-import { useParams } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import NotFoundPage from "../NotFoundPage";
 
 function TodoDetails({ getDeed }) {
   const { key } = useParams();
+  const navigate = useNavigate();
   const deed = getDeed(Number(key));
 
   if (!deed) {
     return <NotFoundPage />;
   }
+
+  const goBack = () => navigate(-1);
 
   return (
     <section>
@@ -21,6 +23,7 @@ function TodoDetails({ getDeed }) {
           <img src={deed.image} alt="Иллюстрация" style={{ maxWidth: "500px", maxHeight: "400px" }} />
         </p>
       )}
+      <button onClick={goBack}>Назад</button>
     </section>
   );
 }
