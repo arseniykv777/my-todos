@@ -12,7 +12,7 @@ function TodoList(props) {
           {list.map((item) => (
             <tr key={item.key}>
               <td>
-                <Link to={`todo/${item.key}`}>
+                <Link to={`/${item.key}`}>
                   {item.done && <del>{item.title}</del>}
                   {!item.done && item.title}
                 </Link>

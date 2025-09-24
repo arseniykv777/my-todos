@@ -59,8 +59,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout handleBurgerClick={handleBurgerClick} isActive={isActive} />}>
           <Route index element={<TodoList list={data} setDoneTodo={setDoneTodo} deleteTodo={deleteTodo} />}></Route>
-          <Route path="/add" element={<TodoAdd addTodo={addTodo} />}></Route>
-          <Route path="/todo/:key" element={<TodoDetails getDeed={getDeed} />}></Route>
+          <Route path="add" element={<TodoAdd addTodo={addTodo} />}></Route>
+          <Route path=":key" element={<TodoDetails getDeed={getDeed} />}></Route>
 
           <Route path="*" element={<NotFoundPage />}></Route>
         </Route>
