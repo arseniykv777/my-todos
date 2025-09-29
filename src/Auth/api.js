@@ -1,4 +1,5 @@
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getDatabase, ref, push, set, get, query, remove} from "firebase/database";
 
 export async function register(email, password) {
   try {
@@ -19,10 +20,9 @@ export async function login(email, password) {
 }
 
 export async function logout() {
-  try {
-    signOut(getAuth());
-    return true;
-  } catch(e) {
-    return err.code
-  }
+  await signOut(getAuth());
+}
+
+export async function addTodo(deed) {
+
 }
