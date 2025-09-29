@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, NavLink } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import TodoList from "./Todo/TodoList";
 import TodoAdd from "./Todo/TodoAdd";
 import TodoDetails from "./Todo/TodoDetails";
@@ -9,6 +9,8 @@ import Layout from "./components/Layout";
 import Register from "./Auth/Register";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebase from "./firebase";
+import Logout from "./Auth/Logout";
+import Login from "./Auth/Login";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -41,18 +43,26 @@ function App() {
       setCurrentUser(user);
       setLoading(false);
     });
+
+    return () => unsubscribe();
   }, []);
 
-  if (loading) return <p>Загрузка</p>;
+  if (loading) return <p>Загрузка...</p>;
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout handleBurgerClick={handleBurgerClick} isActive={isActive} />}>
+        <Route
+          path="/"
+          element={<Layout handleBurgerClick={handleBurgerClick} isActive={isActive} currentUser={currentUser} />}
+        >
           <Route index element={<TodoList list={data} setDoneTodo={setDoneTodo} deleteTodo={deleteTodo} />}></Route>
           <Route path="add" element={<TodoAdd addTodo={addTodo} />}></Route>
           <Route path=":key" element={<TodoDetails getDeed={getDeed} />}></Route>
-          <Route path="register" element={<Register />} />
+          <Route path="register" element={<Register currentUser={currentUser} />} />
+          <Route path="logout" element={<Logout currentUser={currentUser} />}></Route>
+          <Route path="login" element={<Login currentUser={currentUser} />} />
+
           <Route path="*" element={<NotFoundPage />}></Route>
         </Route>
       </Routes>

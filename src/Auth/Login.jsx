@@ -1,8 +1,8 @@
-import { register } from "./api";
+import { login } from "./api";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
 
-function Register({ currentUser }) {
+function Login({ currentUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ function Register({ currentUser }) {
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
     setLoading(true);
-    const result = await register(email, password);
+    const result = await login(email, password);
     setLoading(false);
 
     if (typeof result !== "object") {
@@ -30,7 +30,7 @@ function Register({ currentUser }) {
   }
   return (
     <section>
-      <h1>Регистрация</h1>
+      <h1>Войти</h1>
       <form onSubmit={handleFormSubmit} onReset={clearFormData}>
         <label>
           Адрес электронной почты
@@ -43,11 +43,11 @@ function Register({ currentUser }) {
 
         <div className="buttons">
           <button type="reset">Сброс</button>
-          <button type="submit">Зарегистрироваться</button>
+          <button type="submit">Войти</button>
         </div>
       </form>
     </section>
   );
 }
 
-export default Register;
+export default Login;
