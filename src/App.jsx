@@ -11,6 +11,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import firebase from "./firebase";
 import Logout from "./Auth/Logout";
 import Login from "./Auth/Login";
+import { getList } from "./Auth/api";
+import { del } from "./Auth/api";
+import { setDone } from "./Auth/api";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -18,11 +21,13 @@ function App() {
   const [isActive, setIsActive] = useState(false);
   const [data, setData] = useState(new Array());
 
-  const setDoneTodo = (deedKey) => {
+  const setDoneTodo = async (deedKey) => {
+    setDone(currentUser, deedKey);
     setData((prev) => prev.map((obj) => (obj.key === deedKey ? { ...obj, done: true } : obj)));
   };
 
-  const deleteTodo = (deedKey) => {
+  const deleteTodo = async (deedKey) => {
+    await del(currentUser, deedKey);
     setData((prev) => prev.filter((obj) => obj.key !== deedKey));
   };
 
@@ -41,6 +46,14 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(firebase), (user) => {
       setCurrentUser(user);
+
+      if (!user) {
+        setData(new Array());
+        setLoading(false);
+        return;
+      }
+      const newData = async () => getList(user);
+      newData().then((dataNew) => setData(dataNew));
       setLoading(false);
     });
 
@@ -57,8 +70,8 @@ function App() {
           element={<Layout handleBurgerClick={handleBurgerClick} isActive={isActive} currentUser={currentUser} />}
         >
           <Route index element={<TodoList list={data} setDoneTodo={setDoneTodo} deleteTodo={deleteTodo} />}></Route>
-          <Route path="add" element={<TodoAdd addTodo={addTodo} />}></Route>
-          <Route path=":key" element={<TodoDetails getDeed={getDeed} />}></Route>
+          <Route path="add" element={<TodoAdd addTodo={addTodo} currentUser={currentUser} />}></Route>
+          <Route path=":key" element={<TodoDetails getDeed={getDeed} data={data} />}></Route>
           <Route path="register" element={<Register currentUser={currentUser} />} />
           <Route path="logout" element={<Logout currentUser={currentUser} />}></Route>
           <Route path="login" element={<Login currentUser={currentUser} />} />

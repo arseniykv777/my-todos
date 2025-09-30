@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "./TodoAdd.css";
+import { add } from "../Auth/api";
 
 function TodoAdd(props) {
-  const { addTodo } = props;
+  const { addTodo, currentUser } = props;
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -25,7 +26,7 @@ function TodoAdd(props) {
     }
   };
 
-  const handleFormSubmit = (evt) => {
+  const handleFormSubmit = async (evt) => {
     evt.preventDefault();
 
     const date = new Date();
@@ -38,9 +39,14 @@ function TodoAdd(props) {
       createdAt: date.toLocaleString(),
       key: date.getTime(),
     };
-    addTodo(deed);
+    const addedDeed = await add(currentUser, deed);
+    addTodo(addedDeed);
     setRedirect(true);
   };
+
+  if (!currentUser) {
+    setRedirect(true);
+  }
 
   if (redirect) {
     return <Navigate to="/" />;

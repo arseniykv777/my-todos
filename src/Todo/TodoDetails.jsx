@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import NotFoundPage from "../NotFoundPage";
 
-function TodoDetails({ getDeed }) {
+function TodoDetails({ getDeed, data }) {
   const { key } = useParams();
   const navigate = useNavigate();
-  const deed = getDeed(Number(key));
+  const deed = getDeed(key);
 
   if (!deed) {
     return <NotFoundPage />;
