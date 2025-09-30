@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "./TodoAdd.css";
 import { add } from "../Auth/api";
+import { useEffect } from "react";
 
 function TodoAdd(props) {
   const { addTodo, currentUser } = props;
@@ -11,6 +12,12 @@ function TodoAdd(props) {
   const [image, setImage] = useState("");
 
   const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setRedirect(true);
+    }
+  }, [currentUser]);
 
   const handleTitleChange = (evt) => setTitle(evt.target.value);
   const handleDescChange = (evt) => setDesc(evt.target.value);
@@ -44,9 +51,7 @@ function TodoAdd(props) {
     setRedirect(true);
   };
 
-  if (!currentUser) {
-    setRedirect(true);
-  }
+  console.log(currentUser);
 
   if (redirect) {
     return <Navigate to="/" />;

@@ -3,6 +3,10 @@ import { Navigate } from "react-router-dom";
 import { useState } from "react";
 
 function Login({ currentUser }) {
+  if (currentUser) {
+    return <Navigate to="/" replace />;
+  }
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,9 +29,6 @@ function Login({ currentUser }) {
 
   if (loading) return <p>Загрузка...</p>;
 
-  if (currentUser) {
-    return <Navigate to="/" replace />;
-  }
   return (
     <section>
       <h1>Войти</h1>
