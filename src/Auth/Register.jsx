@@ -1,7 +1,7 @@
 import { register } from "./api";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
-import "./css/register.css";
+import "./css/auth.css";
 
 function Register({ currentUser }) {
   if (currentUser) {

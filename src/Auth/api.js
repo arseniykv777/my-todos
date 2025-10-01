@@ -34,7 +34,6 @@ export async function add(user, deed) {
 }
 
 export async function getList(user) {
-  console.log(user)
   const oSnapshot = await get(query(ref(getDatabase(), `users/${user.uid}/todos`)));
   const oArr = new Array();
   let oDeed;
