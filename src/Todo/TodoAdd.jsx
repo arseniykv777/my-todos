@@ -12,6 +12,16 @@ function TodoAdd(props) {
   const [image, setImage] = useState("");
 
   const [redirect, setRedirect] = useState(false);
+  const [errorTitle, setErrorTitle] = useState("");
+
+  const validate = () => {
+    if (!title) {
+      setErrorTitle("Заголовок не указан");
+      return false;
+    }
+
+    return true;
+  };
 
   useEffect(() => {
     if (!currentUser) {
@@ -35,23 +45,22 @@ function TodoAdd(props) {
 
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
+    if (validate()) {
+      const date = new Date();
 
-    const date = new Date();
-
-    const deed = {
-      title,
-      desc,
-      image,
-      done: false,
-      createdAt: date.toLocaleString(),
-      key: date.getTime(),
-    };
-    const addedDeed = await add(currentUser, deed);
-    addTodo(addedDeed);
-    setRedirect(true);
+      const deed = {
+        title,
+        desc,
+        image,
+        done: false,
+        createdAt: date.toLocaleString(),
+        key: date.getTime(),
+      };
+      const addedDeed = await add(currentUser, deed);
+      addTodo(addedDeed);
+      setRedirect(true);
+    }
   };
-
-  console.log(currentUser);
 
   if (redirect) {
     return <Navigate to="/" />;
@@ -62,11 +71,12 @@ function TodoAdd(props) {
       <h1>Создание нового дела</h1>
       <form onSubmit={handleFormSubmit} encType="multipart/form-data">
         <label>
-          Заголовок
+          Заголовок<span className="secondary-text">(обязательно)</span>
           <input type="text" value={title} onChange={handleTitleChange} />
         </label>
+        {errorTitle && <p className="errorText">{errorTitle}</p>}
         <label>
-          Примечание
+          Примечание<span className="secondary-text bigSecondary">(необязательно)</span>
           <textarea value={desc} onChange={handleDescChange}></textarea>
         </label>
 
