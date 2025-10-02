@@ -80,6 +80,15 @@ function TodoAdd(props) {
           <textarea value={desc} onChange={handleDescChange}></textarea>
         </label>
 
+        {/* <div className="important">
+          <p>Важность</p>
+          <div className="important__buttons">
+            <button autoFocus>Не выбрано</button>
+            <button>Низкая</button>
+            <button>Средняя</button>
+            <button>Высокая</button>
+          </div>
+        </div> */}
         <footer className="form__footer">
           <label className="file-input__label">
             <input type="file" className="file-input" onChange={handleImageChange} />

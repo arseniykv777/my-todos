@@ -47,7 +47,6 @@ function Login({ currentUser }) {
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
     if (validate()) {
-      console.log(123);
       const result = await login(email, password);
 
       if (typeof result !== "object") {
