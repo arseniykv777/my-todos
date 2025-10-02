@@ -7,12 +7,24 @@ import { useEffect } from "react";
 function TodoAdd(props) {
   const { addTodo, currentUser } = props;
 
+  const [activeIndexBtn, setActiveIndexBtn] = useState({ text: "Не выбрано", index: 0 });
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [image, setImage] = useState("");
 
   const [redirect, setRedirect] = useState(false);
   const [errorTitle, setErrorTitle] = useState("");
+
+  useEffect(() => {
+    if (!currentUser) {
+      setRedirect(true);
+    }
+  }, [currentUser]);
+
+  const handleIndexBtn = (textBtn, i) => {
+    setActiveIndexBtn({ text: textBtn, index: i });
+  };
 
   const validate = () => {
     if (!title) {
@@ -22,12 +34,6 @@ function TodoAdd(props) {
 
     return true;
   };
-
-  useEffect(() => {
-    if (!currentUser) {
-      setRedirect(true);
-    }
-  }, [currentUser]);
 
   const handleTitleChange = (evt) => setTitle(evt.target.value);
   const handleDescChange = (evt) => setDesc(evt.target.value);
@@ -53,6 +59,7 @@ function TodoAdd(props) {
         desc,
         image,
         done: false,
+        important: activeIndexBtn,
         createdAt: date.toLocaleString(),
         key: date.getTime(),
       };
@@ -80,15 +87,28 @@ function TodoAdd(props) {
           <textarea value={desc} onChange={handleDescChange}></textarea>
         </label>
 
-        {/* <div className="important">
+        <div className="important">
           <p>Важность</p>
           <div className="important__buttons">
-            <button autoFocus>Не выбрано</button>
-            <button>Низкая</button>
-            <button>Средняя</button>
-            <button>Высокая</button>
+            {["Не выбрано", "Низкая", "Средняя", "Высокая"].map((text, i) => (
+              <button
+                key={i}
+                className={activeIndexBtn === i ? "ActiveImportantBtn" : ""}
+                autoFocus={i === 0}
+                type="button"
+                onClick={() => handleIndexBtn(text, i)}
+              >
+                {text}
+              </button>
+            ))}
+            {/* <button autoFocus type="button">
+              Не выбрано
+            </button>
+            <button type="button">Низкая</button>
+            <button type="button">Средняя</button>
+            <button type="button">Высокая</button> */}
           </div>
-        </div> */}
+        </div>
         <footer className="form__footer">
           <label className="file-input__label">
             <input type="file" className="file-input" onChange={handleImageChange} />

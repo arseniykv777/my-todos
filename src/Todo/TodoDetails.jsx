@@ -16,6 +16,7 @@ function TodoDetails({ getDeed, data }) {
     <section>
       {deed.done && <p className="success">Выполнено</p>}
       <h1>{deed.title}</h1>
+      <p>Важность: {deed.important.text}</p>
       <p>{deed.createdAt}</p>
       {deed.desc && <p>{deed.desc}</p>}
       {deed.image && (
