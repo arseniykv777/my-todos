@@ -29,6 +29,12 @@
   color: #535bf2;
 }
 
+.navbar-all {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .burger-menu {
   display: none;
   flex-direction: column;
@@ -53,9 +59,9 @@
   }
 
   .navbar-all {
-    display: none;
-    flex-direction: column;
-    width: 100%;
+      display: none;
+      flex-direction: column;
+      width: 100%;
   }
 
   .navbar-active {

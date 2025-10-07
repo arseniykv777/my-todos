@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import "./TodoList.css";
-import { Link } from "react-router-dom";
+import {Link, useLoaderData} from "react-router-dom";
 
-function TodoList(props) {
-  const { list, setDoneTodo, deleteTodo } = props;
+function TodoList() {
+  const list = useLoaderData()
+  if (!list) return null;
   const [activeSortBtnIndex, setActiveSortBtnIndex] = useState(0);
   const [activeStateBtnIndex, setActiveStateBtnIndex] = useState(0);
   const [activeImportantBtnIndex, setActiveImportantBtnIndex] = useState(0);
@@ -92,12 +93,12 @@ function TodoList(props) {
                   </Link>
                 </td>
                 <td>
-                  <button disabled={item.done} onClick={() => setDoneTodo(item.key)} className="done">
+                  <button disabled={item.done} className="done">
                     &#9745;
                   </button>
                 </td>
                 <td>
-                  <button onClick={() => deleteTodo(item.key)} className="delete">
+                  <button className="delete">
                     &#9746;
                   </button>
                 </td>

@@ -1,19 +1,43 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
 import { getDatabase, ref, push, set, get, query, remove} from "firebase/database";
+import {redirect} from "react-router-dom";
 
-export async function register(email, password) {
+import firebaseApp from "../firebase.jsx";
+
+const auth = getAuth(firebaseApp);
+const database = getDatabase(firebaseApp);
+
+function getUserId() {
+  if (auth.currentUser) {
+    return auth.currentUser.uid;
+  } else {
+    return window.localStorage.getItem("user-id");
+  }
+}
+
+export async function register({request}) {
+  const fd = await request.formData();
   try {
-    const oUC = await createUserWithEmailAndPassword(getAuth(), email, password)
-    return oUC.user;
+    const oUC = await createUserWithEmailAndPassword(auth, fd.get('email'), fd.get('password'));
+    window.localStorage.setItem("user-id", oUC.user.uid);
+    return redirect('/');
   } catch (err) {
     return err.code
   }
 }
 
-export async function login(email, password) {
+export async function login({request}) {
+  const fd = await request.formData();
   try {
-    const oUC = await signInWithEmailAndPassword(getAuth(), email, password);
-    return oUC.user 
+    const oUC = await signInWithEmailAndPassword(auth, fd.get('email'), fd.get('password'));
+    window.localStorage.setItem("user-id", oUC.user.uid);
+    return redirect('/');
   } catch (err) {
     return err.code
   }
@@ -33,12 +57,15 @@ export async function add(user, deed) {
   return oDeed;
 }
 
-export async function getList(user) {
-  const oSnapshot = await get(query(ref(getDatabase(), `users/${user.uid}/todos`)));
-  const oArr = new Array();
+export async function getList() {
+  const currentUserId = getUserId();
+  console.log(currentUserId);
+  if (!currentUserId) return null;
+  const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos`)));
+  const oArr = [];
   let oDeed;
   oSnapshot.forEach((oDoc) => {
-    oDeed = oDoc.val(); 
+    oDeed = oDoc.val();
     oDeed.key = oDoc.key;
     oArr.push(oDeed);
   })
@@ -52,4 +79,8 @@ export async function setDone(user, key) {
 
 export async function del(user, key) {
   return remove(ref(getDatabase(), `users/${user.uid}/todos/${key}`));
+}
+
+export function setStateChangeHandler(func) {
+  return onAuthStateChanged(auth, func);
 }

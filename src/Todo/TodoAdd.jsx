@@ -93,7 +93,7 @@ function TodoAdd(props) {
             {["Не выбрано", "Низкая", "Средняя", "Высокая"].map((text, i) => (
               <button
                 key={i}
-                className={activeIndexBtn === i ? "ActiveImportantBtn" : ""}
+                className={activeIndexBtn.index === i ? "ActiveBtn" : ``}
                 autoFocus={i === 0}
                 type="button"
                 onClick={() => handleIndexBtn(text, i)}
