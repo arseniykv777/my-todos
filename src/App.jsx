@@ -19,10 +19,10 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isActive, setIsActive] = useState(false);
-  const [data, setData] = useState(new Array());
+  const [data, setData] = useState([]);
 
   const setDoneTodo = async (deedKey) => {
-    setDone(currentUser, deedKey);
+    await setDone(currentUser, deedKey);
     setData((prev) => prev.map((obj) => (obj.key === deedKey ? { ...obj, done: true } : obj)));
   };
 
@@ -48,7 +48,7 @@ function App() {
       setCurrentUser(user);
 
       if (!user) {
-        setData(new Array());
+        setData([]);
         setLoading(false);
         return;
       }
