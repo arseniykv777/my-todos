@@ -1,38 +1,20 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "./TodoAdd.css";
+import {useSubmit} from "react-router-dom";
 import { add } from "../Auth/api";
-import { useEffect } from "react";
 
-function TodoAdd(props) {
-  const { addTodo, currentUser } = props;
-
+function TodoAdd() {
   const [activeIndexBtn, setActiveIndexBtn] = useState({ text: "Не выбрано", index: 0 });
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [image, setImage] = useState("");
 
-  const [redirect, setRedirect] = useState(false);
-  const [errorTitle, setErrorTitle] = useState("");
-
-  useEffect(() => {
-    if (!currentUser) {
-      setRedirect(true);
-    }
-  }, [currentUser]);
+  const submit = useSubmit();
 
   const handleIndexBtn = (textBtn, i) => {
     setActiveIndexBtn({ text: textBtn, index: i });
-  };
-
-  const validate = () => {
-    if (!title) {
-      setErrorTitle("Заголовок не указан");
-      return false;
-    }
-
-    return true;
   };
 
   const handleTitleChange = (evt) => setTitle(evt.target.value);
@@ -49,28 +31,15 @@ function TodoAdd(props) {
     }
   };
 
-  const handleFormSubmit = async (evt) => {
+  const handleFormSubmit = (evt) => {
     evt.preventDefault();
-    if (validate()) {
-      const date = new Date();
 
-      const deed = {
-        title,
-        desc,
-        image,
-        done: false,
-        important: activeIndexBtn,
-        createdAt: date.toLocaleString(),
-        key: date.getTime(),
-      };
-      const addedDeed = await add(currentUser, deed);
-      addTodo(addedDeed);
-      setRedirect(true);
-    }
-  };
-
-  if (redirect) {
-    return <Navigate to="/" />;
+    const date = new Date();
+    const createdAt = date.toLocaleString();
+    const key = date.getTime()
+    const text = activeIndexBtn.text;
+    const index = activeIndexBtn.index;
+    submit({title, desc, image, createdAt, key, text, index}, {action: '/add', method: 'POST'});
   }
 
   return (
@@ -81,7 +50,6 @@ function TodoAdd(props) {
           Заголовок<span className="secondary-text">(обязательно)</span>
           <input type="text" value={title} onChange={handleTitleChange} />
         </label>
-        {errorTitle && <p className="errorText">{errorTitle}</p>}
         <label>
           Примечание<span className="secondary-text bigSecondary">(необязательно)</span>
           <textarea value={desc} onChange={handleDescChange}></textarea>

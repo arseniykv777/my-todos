@@ -44,22 +44,34 @@ export async function login({request}) {
 }
 
 export async function logout() {
-  await signOut(getAuth());
+  await signOut(auth);
+  window.localStorage.removeItem("user-id");
+  return redirect('/login');
 }
 
-export async function add(user, deed) {
-  const oRef = push(ref(getDatabase(), `users/${user.uid}/todos`));
-  await set(oRef, deed);
-  const oSnapShot = await get(query(oRef));
-  const oDeed = oSnapShot.val();
-  oDeed.key = oRef.key;
+export async function add({request}) {
+  const currentUserId = getUserId();
+  const fd = await request.formData();
+  const newDeed = {
+    title: fd.get('title'),
+    desc: fd.get('desc'),
+    image: fd.get('image'),
+    key: fd.get('key'),
+    createdAt: fd.get('createdAt'),
+    important: {
+      index: Number(fd.get('index')),
+      text: fd.get('text'),
+    }
+  }
 
-  return oDeed;
+  const oRef = push(ref(getDatabase(), `users/${currentUserId}/todos`));
+  await set(oRef, newDeed);
+
+  return redirect('/');
 }
 
 export async function getList() {
   const currentUserId = getUserId();
-  console.log(currentUserId);
   if (!currentUserId) return null;
   const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos`)));
   const oArr = [];

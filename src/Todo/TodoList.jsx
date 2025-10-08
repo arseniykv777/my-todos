@@ -3,16 +3,14 @@ import "./TodoList.css";
 import {Link, useLoaderData} from "react-router-dom";
 
 function TodoList() {
-  const list = useLoaderData()
-  if (!list) return null;
   const [activeSortBtnIndex, setActiveSortBtnIndex] = useState(0);
   const [activeStateBtnIndex, setActiveStateBtnIndex] = useState(0);
   const [activeImportantBtnIndex, setActiveImportantBtnIndex] = useState(0);
 
+  const list = useLoaderData();
   const handleActiveSortBtnIndex = (index) => {
     setActiveSortBtnIndex(index);
   };
-
   const handleStateBtn = (index) => {
     setActiveStateBtnIndex(index);
   };
@@ -70,16 +68,17 @@ function TodoList() {
       )}
       <table>
         <tbody>
-          {list
-            .filter((item) => {
+          {list.filter((item) => {
               if (activeSortBtnIndex === 0) {
                 if (activeStateBtnIndex === 0) return true;
                 else if (activeStateBtnIndex === 1) {
                   return item.done;
                 } else if (activeStateBtnIndex === 2) return !item.done;
               } else if (activeSortBtnIndex === 1) {
+                console.log(activeImportantBtnIndex);
                 if (activeImportantBtnIndex === 0) return true;
                 for (let t = 1; t <= 3; t++) {
+
                   if (activeImportantBtnIndex === t) return item.important.index === t;
                 }
               }
