@@ -64,7 +64,6 @@ export async function add({request}) {
   }
 
   const oRef = push(ref(database, `users/${currentUserId}/todos`));
-  newDeed.key = oRef.key;
   await set(oRef, newDeed);
 
   return redirect('/');
@@ -87,6 +86,9 @@ export async function getList() {
 export async function getTodo({params}) {
   const currentUserId = getUserId();
   const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos/${params.key}`)));
+  if (!oSnapshot.exists) {
+    throw new Error();
+  }
   return oSnapshot.val();
 }
 
