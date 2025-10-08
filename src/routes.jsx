@@ -5,8 +5,9 @@ import TodoList from "./Todo/TodoList.jsx";
 import Login from "./Auth/Login.jsx";
 import Register from "./Auth/Register.jsx";
 import TodoAdd from "./Todo/TodoAdd.jsx";
+import TodoDetails from "./Todo/TodoDetails.jsx";
 
-import {getList, login, logout, register, add} from "./Auth/api.js";
+import {getList, getTodo, actTodo, login, logout, register, add} from "./Auth/api.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
       <Route path='login' element={<Login />} action={login}/>
       <Route path='register' element={<Register/>} action={register}/>
       <Route path='add' element={<TodoAdd />} action={add}/>
+      <Route path=':key' element={<TodoDetails />} loader={getTodo} action={actTodo}/>
       <Route path='logout' loader={logout}/>
     </Route>
   )

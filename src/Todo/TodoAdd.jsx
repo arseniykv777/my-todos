@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
 import "./TodoAdd.css";
 import {useSubmit} from "react-router-dom";
-import { add } from "../Auth/api";
 
 function TodoAdd() {
   const [activeIndexBtn, setActiveIndexBtn] = useState({ text: "Не выбрано", index: 0 });
@@ -36,10 +34,9 @@ function TodoAdd() {
 
     const date = new Date();
     const createdAt = date.toLocaleString();
-    const key = date.getTime()
     const text = activeIndexBtn.text;
     const index = activeIndexBtn.index;
-    submit({title, desc, image, createdAt, key, text, index}, {action: '/add', method: 'POST'});
+    submit({title, desc, image, createdAt, text, index}, {action: '/add', method: 'POST'});
   }
 
   return (

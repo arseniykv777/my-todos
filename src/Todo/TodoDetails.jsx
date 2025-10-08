@@ -1,16 +1,10 @@
-import { useParams, useNavigate } from "react-router-dom";
-import NotFoundPage from "../NotFoundPage";
+import {useLoaderData, useNavigate} from "react-router-dom";
 
-function TodoDetails({ getDeed, data }) {
-  const { key } = useParams();
+function TodoDetails() {
   const navigate = useNavigate();
-  const deed = getDeed(key);
-
-  if (!deed) {
-    return <NotFoundPage />;
-  }
-
   const goBack = () => navigate(-1);
+
+  const deed = useLoaderData();
 
   return (
     <section>

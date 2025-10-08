@@ -56,7 +56,6 @@ export async function add({request}) {
     title: fd.get('title'),
     desc: fd.get('desc'),
     image: fd.get('image'),
-    key: fd.get('key'),
     createdAt: fd.get('createdAt'),
     important: {
       index: Number(fd.get('index')),
@@ -64,7 +63,8 @@ export async function add({request}) {
     }
   }
 
-  const oRef = push(ref(getDatabase(), `users/${currentUserId}/todos`));
+  const oRef = push(ref(database, `users/${currentUserId}/todos`));
+  newDeed.key = oRef.key;
   await set(oRef, newDeed);
 
   return redirect('/');
@@ -72,7 +72,6 @@ export async function add({request}) {
 
 export async function getList() {
   const currentUserId = getUserId();
-  if (!currentUserId) return null;
   const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos`)));
   const oArr = [];
   let oDeed;
@@ -85,12 +84,23 @@ export async function getList() {
   return oArr;
 }
 
-export async function setDone(user, key) {
-  return set(ref(getDatabase(), `users/${user.uid}/todos/${key}/done`), true);
+export async function getTodo({params}) {
+  const currentUserId = getUserId();
+  const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos/${params.key}`)));
+  return oSnapshot.val();
 }
 
-export async function del(user, key) {
-  return remove(ref(getDatabase(), `users/${user.uid}/todos/${key}`));
+export async function actTodo({params, request}) {
+  const currentUserId = getUserId();
+
+  if (request.method === 'PATCH') {
+    const oRef = ref(database, `users/${currentUserId}/todos/${params.key}/done`);
+    await set(oRef, true);
+  } else if (request.method === 'DELETE') {
+    const oRef = ref(database, `users/${currentUserId}/todos/${params.key}`);
+    await remove(oRef);
+  }
+
 }
 
 export function setStateChangeHandler(func) {

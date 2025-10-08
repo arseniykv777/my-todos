@@ -1,12 +1,13 @@
 import { useState } from "react";
 import "./TodoList.css";
-import {Link, useLoaderData} from "react-router-dom";
+import {Link, useFetcher, useLoaderData} from "react-router-dom";
 
 function TodoList() {
   const [activeSortBtnIndex, setActiveSortBtnIndex] = useState(0);
   const [activeStateBtnIndex, setActiveStateBtnIndex] = useState(0);
   const [activeImportantBtnIndex, setActiveImportantBtnIndex] = useState(0);
 
+  const fetch = useFetcher();
   const list = useLoaderData();
   const handleActiveSortBtnIndex = (index) => {
     setActiveSortBtnIndex(index);
@@ -18,6 +19,10 @@ function TodoList() {
   const handleImportantBtn = (index) => {
     setActiveImportantBtnIndex(index);
   };
+
+  const actClick = (TodoID, method) => {
+    fetch.submit(null, {action: `${TodoID}`, method: method});
+  }
 
   return (
     <section>
@@ -75,7 +80,6 @@ function TodoList() {
                   return item.done;
                 } else if (activeStateBtnIndex === 2) return !item.done;
               } else if (activeSortBtnIndex === 1) {
-                console.log(activeImportantBtnIndex);
                 if (activeImportantBtnIndex === 0) return true;
                 for (let t = 1; t <= 3; t++) {
 
@@ -92,12 +96,12 @@ function TodoList() {
                   </Link>
                 </td>
                 <td>
-                  <button disabled={item.done} className="done">
+                  <button disabled={item.done} className="done" onClick={() => actClick(item.key, 'PATCH')}>
                     &#9745;
                   </button>
                 </td>
                 <td>
-                  <button className="delete">
+                    <button className="delete" onClick={() => actClick(item.key, 'DELETE')}>
                     &#9746;
                   </button>
                 </td>
