@@ -51,6 +51,8 @@ export async function logout() {
 
 export async function add({request}) {
   const currentUserId = getUserId();
+  if (!currentUserId) return redirect('/login');
+
   const fd = await request.formData();
   const newDeed = {
     title: fd.get('title'),
@@ -71,6 +73,8 @@ export async function add({request}) {
 
 export async function getList() {
   const currentUserId = getUserId();
+  if (!currentUserId) return redirect('/login');
+
   const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos`)));
   const oArr = [];
   let oDeed;
@@ -85,6 +89,8 @@ export async function getList() {
 
 export async function getTodo({params}) {
   const currentUserId = getUserId();
+  if (!currentUserId) return redirect('/login');
+
   const oSnapshot = await get(query(ref(database, `users/${currentUserId}/todos/${params.key}`)));
   if (!oSnapshot.exists) {
     throw new Error();
@@ -94,6 +100,7 @@ export async function getTodo({params}) {
 
 export async function actTodo({params, request}) {
   const currentUserId = getUserId();
+  if (!currentUserId) return redirect('/login');
 
   if (request.method === 'PATCH') {
     const oRef = ref(database, `users/${currentUserId}/todos/${params.key}/done`);
@@ -107,4 +114,10 @@ export async function actTodo({params, request}) {
 
 export function setStateChangeHandler(func) {
   return onAuthStateChanged(auth, func);
+}
+
+export function onlyLoggedOut() {
+  if (getUserId()) {
+    return redirect('/');
+  } return null;
 }

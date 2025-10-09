@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./TodoAdd.css";
-import {useSubmit} from "react-router-dom";
+import {Navigate, useSubmit} from "react-router-dom";
 
 function TodoAdd() {
   const [activeIndexBtn, setActiveIndexBtn] = useState({ text: "Не выбрано", index: 0 });
@@ -9,7 +9,13 @@ function TodoAdd() {
   const [desc, setDesc] = useState("");
   const [image, setImage] = useState("");
 
+  const [errorTitle, setErrorTitle] = useState("");
+
   const submit = useSubmit();
+
+  if (!window.localStorage.getItem("user-id")) {
+    return <Navigate to='/login'/>
+  }
 
   const handleIndexBtn = (textBtn, i) => {
     setActiveIndexBtn({ text: textBtn, index: i });
@@ -29,14 +35,25 @@ function TodoAdd() {
     }
   };
 
+  const validate = () => {
+    setErrorTitle('');
+    if (!title) {
+      setErrorTitle('Заголовок не указан')
+      return false;
+    }
+    return true;
+  }
+
   const handleFormSubmit = (evt) => {
     evt.preventDefault();
 
-    const date = new Date();
-    const createdAt = date.toLocaleString();
-    const text = activeIndexBtn.text;
-    const index = activeIndexBtn.index;
-    submit({title, desc, image, createdAt, text, index}, {action: '/add', method: 'POST'});
+    if (validate()) {
+      const date = new Date();
+      const createdAt = date.toLocaleString();
+      const text = activeIndexBtn.text;
+      const index = activeIndexBtn.index;
+      submit({title, desc, image, createdAt, text, index}, {action: '/add', method: 'POST'});
+    }
   }
 
   return (
@@ -44,7 +61,7 @@ function TodoAdd() {
       <h1>Создание нового дела</h1>
       <form onSubmit={handleFormSubmit} encType="multipart/form-data">
         <label>
-          Заголовок<span className="secondary-text">(обязательно)</span>
+          Заголовок<span className="secondary-text">(обязательно) {errorTitle && <span className='errorText'>{errorTitle}</span>}</span>
           <input type="text" value={title} onChange={handleTitleChange} />
         </label>
         <label>
