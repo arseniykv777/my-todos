@@ -1,6 +1,6 @@
 
 import { useFetcher} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import "./css/auth.css";
 
 function Login() {
@@ -33,36 +33,37 @@ function Login() {
 
   const handleFormSubmit = (evt) => {
     evt.preventDefault();
-    fetcher.data = undefined;
     if (validate()) {
       fetcher.submit({email, password}, {action: '/login', method: 'POST'});
     }
   }
 
-  useEffect(() => {
-    if (fetcher.data) {
-      resetErrorMessages();
-      if (fetcher.data === 'auth/invalid-email') {
+  if (fetcher.data) {
+    resetErrorMessages();
+    switch (fetcher.data) {
+      case "auth/invalid-email":
         setErrorEmail('Адрес электронной почты не валидный');
-      } else if (fetcher.data === 'auth/user-disabled') {
-        setErrorEmail('Пользователь отключен')
-      } else if (fetcher.data === 'auth/user-not-found') {
-        setErrorEmail('Пользователь с таким адресом электронной почты не найден');
-      } else if (fetcher.data === 'auth/wrong-password') {
-        setErrorPassword('Неверный пароль')
-      } else if (fetcher.data === 'auth/invalid-credential') {
+        break;
+      case "auth/invalid-credential":
         setErrorEmail("Пароль или почта неверны");
         setErrorPassword('Пароль или почта неверны');
-      } else if (fetcher.data === 'auth/too-many-requests') {
+        break;
+      case "auth/wrong-password":
+        setErrorPassword('Неверный пароль')
+        break;
+      case "auth/user-disabled":
+        setErrorEmail('Пользователь отключен')
+        break;
+      case "auth/user-not-found":
+        setErrorEmail('Пользователь с таким адресом электронной почты не найден');
+        break;
+      case "auth/too-many-requests":
         setErrorEmail('Слишком много запросов. Повторите позже');
         setErrorPassword('Слишком много запросов. Повторите позже');
-      }
+        break;
     }
-
-  }, [fetcher.data])
-
-
-
+    fetcher.data = undefined;
+  }
 
   return (
     <section>
