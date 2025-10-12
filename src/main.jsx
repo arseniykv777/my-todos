@@ -5,7 +5,6 @@ import "./index.css";
 import "./firebase.jsx";
 import router from "./routes.jsx";
 
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router}/>
