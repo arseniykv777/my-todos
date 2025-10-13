@@ -1,2 +1,2 @@
-<h1>TODOS на React + Vite</h1>
+<h1>TODOS на React</h1>
 <p>С применением React Router</p>
